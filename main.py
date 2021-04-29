@@ -7,8 +7,9 @@ from email.header import decode_header, make_header
 
 import requests
 from bs4 import BeautifulSoup
+import lxml
 
-from model import User
+# from model import User
 
 
 def get_mail():
@@ -99,7 +100,7 @@ def process_message(email_id, mail):
     text = ''
     recipients = get_recipients(email_message)
 
-    user = User.find_one({"notify_email": recipients['From']})
+    # user = User.find_one({"notify_email": recipients['From']})
     # body = get_email_body(email_message)
     if email_message.is_multipart():
         for part in email_message.walk():
