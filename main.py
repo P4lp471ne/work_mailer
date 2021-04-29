@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 import lxml
 
-# from model import User
+from model import User
 
 
 def get_mail():
@@ -75,7 +75,7 @@ def send_email_to_bpm(recipients, subject, text, to, files):
         'mail_cc': recipients['Cc'],
         'files': files
     }
-    # return Email.from_dict(json_email).save()
+    return Email.from_dict(json_email).save()
 
 
 def save_files(email_message):
@@ -100,8 +100,8 @@ def process_message(email_id, mail):
     text = ''
     recipients = get_recipients(email_message)
 
-    # user = User.find_one({"notify_email": recipients['From']})
-    # body = get_email_body(email_message)
+    user = User.find_one({"notify_email": recipients['From']})
+    body = get_email_body(email_message)
     if email_message.is_multipart():
         for part in email_message.walk():
             ctype = part.get_content_type()
