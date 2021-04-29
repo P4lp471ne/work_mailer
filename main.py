@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 import lxml
 
-from model import User
+from model import User, Email
 
 
 def get_mail():
@@ -63,6 +63,7 @@ def send_file_to_the_file_stock(filename):
     file = {'file': open(filename, 'rb')}
     token = {'Authorization': 'Bearer ' + create_token()}
     res = requests.post(os.getenv('FILE_STOCK') + '/upload', files=file, headers=token)
+    requests.post(os.getenv('FILE_STOCK') + f"/files/change_access_by_id/{res.json()['id']}")
     return {"id": res.json()['id'], "filename": filename}
 
 
@@ -101,7 +102,6 @@ def process_message(email_id, mail):
     recipients = get_recipients(email_message)
 
     user = User.find_one({"notify_email": recipients['From']})
-    body = get_email_body(email_message)
     if email_message.is_multipart():
         for part in email_message.walk():
             ctype = part.get_content_type()
